@@ -1,1 +1,3 @@
-print("ca marche")
+import numpy as np
+
+print("env OK 🚀")
