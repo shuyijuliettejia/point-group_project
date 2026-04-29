@@ -5,10 +5,7 @@ import streamlit as st
 import py3Dmol
 from stmol import showmol
 
-# ═══════════════════════════════════════════════════════
 #  CONSTRUCTION DU FICHIER XYZ (format lu par py3Dmol)
-# ═══════════════════════════════════════════════════════
-
 def construire_xyz(molecule_data):
     """
     py3Dmol lit un format texte standard appelé XYZ.
@@ -21,12 +18,8 @@ def construire_xyz(molecule_data):
         lignes.append(f"{a['element']}  {a['x']:.4f}  {a['y']:.4f}  {a['z']:.4f}")
     return "\n".join(lignes)
 
-
-# ═══════════════════════════════════════════════════════
 #  AJOUT DES AXES DE SYMÉTRIE
 #  py3Dmol a addCylinder et addSphere intégrés
-# ═══════════════════════════════════════════════════════
-
 def ajouter_axes(vue, molecule_data):
     """
     Dessine chaque axe Cn comme un cylindre rouge
@@ -66,11 +59,8 @@ def ajouter_axes(vue, molecule_data):
         })
 
 
-# ═══════════════════════════════════════════════════════
 #  AJOUT DES PLANS DE SYMÉTRIE
 #  py3Dmol addCustom pour les triangles semi-transparents
-# ═══════════════════════════════════════════════════════
-
 COULEURS_PLAN = {"σh": "#3B8BD4", "σv": "#EF9F27", "σd": "#1D9E75"}
 
 def ajouter_plans(vue, molecule_data):
@@ -128,10 +118,7 @@ def ajouter_plans(vue, molecule_data):
         })
 
 
-# ═══════════════════════════════════════════════════════
 #  CENTRE D'INVERSION
-# ═══════════════════════════════════════════════════════
-
 def ajouter_inversion(vue):
     vue.addSphere({
         "center":  {"x": 0, "y": 0, "z": 0},
@@ -146,11 +133,7 @@ def ajouter_inversion(vue):
         "backgroundColor": "transparent",
     })
 
-
-# ═══════════════════════════════════════════════════════
 #  PROPRIÉTÉS DEPUIS LE GROUPE PONCTUEL
-# ═══════════════════════════════════════════════════════
-
 def deduire_proprietes(molecule_data):
     import re
     pg = molecule_data.get("point_group", "C1")
@@ -171,10 +154,7 @@ def deduire_proprietes(molecule_data):
     return chiral, polaire, ir_txt, raman_txt
 
 
-# ═══════════════════════════════════════════════════════
 #  INTERFACE STREAMLIT
-# ═══════════════════════════════════════════════════════
-
 def lancer_interface(molecule_data):
     st.set_page_config(page_title="Symétrie moléculaire", layout="wide")
     st.title("Visualiseur de symétrie moléculaire")
@@ -241,12 +221,8 @@ def lancer_interface(molecule_data):
 
     st.caption("Clic-glisser pour tourner · Molette pour zoomer · Double-clic pour centrer")
 
-
-# ═══════════════════════════════════════════════════════
 #  DICTIONNAIRE EXEMPLE H2O
 #  Remplacer par le molecule_data de ta coéquipière
-# ═══════════════════════════════════════════════════════
-
 molecule_data = {
     "nom":          "ammonia",
     "formule":      "NH₃",
