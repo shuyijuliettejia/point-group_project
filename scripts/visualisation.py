@@ -213,7 +213,10 @@ def lancer_interface(molecule_data):
 
         # Charger la molécule en format XYZ — py3Dmol fait tout le rendu
         vue.addModel(construire_xyz(molecule_data), "xyz")
-        vue.setStyle({}, {style_mol: {"colorscheme": "Jmol"}})
+        vue.setStyle({}, {
+    "stick": {"radius": 0.12, "colorscheme": "Jmol"},
+    "sphere": {"scale": 0.3, "colorscheme": "Jmol"}
+})
 
         # Ajouter les éléments de symétrie
         if show_axes:
