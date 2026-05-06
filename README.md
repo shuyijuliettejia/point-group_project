@@ -2,15 +2,27 @@
 
 ### Interactive Molecular Symmetry Analysis in Python
 
-Point Group Project is a computational chemistry tool that automatically determines the **point group** of a molecule and visualizes its symmetry elements in an interactive 3D environment 🔬✨
+Molecular symmetry is one of those chemistry topics that is both fascinating and notoriously difficult to visualize. On paper, concepts like rotational axes, mirror planes, inversion centers, and character tables can quickly become abstract — especially when trying to imagine them in three dimensions 🤯📐 
 
-Simply enter an IUPAC molecule name and the program will:
+During our second year at EPFL, we wanted to change that by creating a tool that makes molecular symmetry feel interactive, intuitive, and genuinely fun to explore.
 
-- 🧬 Generate the 3D molecular structure
-- 🔄 Detect symmetry operations
-- 📐 Determine the molecular point group
-- 🎨 Visualize symmetry axes and mirror planes
-- 🌐 Display the molecule interactively in 3D
+Point Group Project is an educational computational chemistry application that automatically analyzes the symmetry of a molecule starting from something as simple as its IUPAC name 🧬✨ Instead of manually searching for symmetry elements, users can instantly generate a fully optimized 3D molecular structure, detect its symmetry operations, determine its point group, and visualize everything directly in an interactive 3D environment 🌍🔬
+
+What excited us most about this project is the way it combines several fields into one experience: chemistry ⚛️, mathematics 📊, programming 💻, scientific visualization 🎨, and molecular modeling 🧪. Behind the scenes, the program uses real computational chemistry workflows: molecules are retrieved from chemical databases, optimized in 3D, analyzed through symmetry operations, and finally rendered interactively with custom graphical overlays for axes, planes, and inversion centers.
+
+---
+✨ Features
+🧬 Automatic 3D molecule generation from an IUPAC name
+🔄 Detection of molecular symmetry operations
+📐 Automatic point group determination
+🎨 Interactive visualization of symmetry axes and mirror planes
+🌐 Real-time 3D molecular rendering
+📚 Character table visualization for selected point groups
+⚛️ Analysis of molecular properties:
+- chirality
+- polarity
+- IR activity
+- Raman activity
 
 ---
 
@@ -45,13 +57,13 @@ Run the visualization interface:
 streamlit run scripts/visualisation.py
 ```
 
-If you need jupyter lab, install it:
+Optional - If you need jupyter lab, install it:
 
 ```bash
 pip install jupyterlab
 ```
 
-Optional: Using Conda Environments
+Optional - Using Conda Environments
 If you prefer using Conda for Python environments, you can create an empty environment before installing as so:
 
 ```bash
@@ -60,22 +72,15 @@ conda activate #your_env_name
 ```
 ---
 
-## 🎯 Project Goals
+## 🎯 Why This Project Matters
 
-This project was designed to make molecular symmetry:
-
-- more visual 👀
-- more intuitive 🧠
-- more interactive 🎮
-- and easier to learn 📚
-
-It combines chemistry, programming, and scientific visualization into a fun educational tool ⚛️
+This project aims to make molecular symmetry easier to visualize and far more interactive than the traditional textbook approach 📚✨ Instead of memorizing abstract symmetry operations, students can directly explore them in 3D and develop a more intuitive understanding of how molecules behave in space 🧬🌍 Ultimately, our goal is to turn a concept that can sometimes feel intimidating into something engaging, accessible, and even fun to learn 🚀⚛️
 
 ---
 
 ## 👩‍🔬 Authors
 
-Developed by:
+Developed at École Polytechnique Fédérale de Lausanne by:
 - Julie Schweizer
 - Margaux Bourhis
 - Shuyi Jia
