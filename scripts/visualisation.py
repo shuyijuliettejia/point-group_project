@@ -177,32 +177,42 @@ def deduire_proprietes(molecule_data):
 
 def lancer_interface(molecule_data):
     st.set_page_config(page_title="Symétrie moléculaire", layout="wide")
-    st.title("Visualiseur de symétrie moléculaire")
+    st.title("Molecular symmetry visualisator")
     st.markdown(
         f"**{molecule_data['nom']}** — `{molecule_data.get('formule', '')}` "
-        f"— groupe ponctuel : **{molecule_data['point_group']}**"
+        f"— point group : **{molecule_data['point_group']}**"
     )
 
     col_vue, col_info = st.columns([3, 1])
 
     with col_info:
-        st.markdown("### Affichage")
+        st.markdown("### Display")
         show_axes   = st.checkbox("Axes Cn",    value=True)
         show_plans  = st.checkbox("Plans σ",    value=True)
-        show_labels = st.checkbox("Étiquettes", value=True)
-        style_mol   = st.selectbox("Style molécule", ["stick", "sphere", "line"])
+        show_labels = st.checkbox("Atom's name", value=True)
+        style_mol   = st.selectbox("Molecule style", ["stick", "sphere", "line"])
 
         st.markdown("---")
-        st.markdown("### Légende des plans")
-        st.markdown("🟠 **σv** — vertical  \n🔵 **σh** — horizontal  \n🟢 **σd** — diédral  \n🔴 **axe Cn** — rouge")
+        st.markdown("### Legend of plans")
+        st.markdown("🟠 **σv** — vertical  \n🔵 **σh** — horizontal  \n🟢 **σd** — diedral  \n🔴 **axe Cn**")
 
         st.markdown("---")
-        st.markdown("### Propriétés")
+        st.markdown("### Properties")
         chiral, polaire, ir_txt, raman_txt = deduire_proprietes(molecule_data)
-        st.metric("Chiralité",   "Chirale"  if chiral  else "Achirale")
-        st.metric("Polarité",    "Polaire"  if polaire else "Apolaire")
+        st.metric("Chirality",   "Chiral"  if chiral  else "Achiral")
+        st.metric("Polarity",    "Polar"  if polaire else "Apolar")
         st.metric("IR actif",    ir_txt)
         st.metric("Raman actif", raman_txt)
+        st.markdown("---")
+        st.markdown("### Character table")
+        from irreps import get_character_table
+        table = get_character_table(molecule_data["point_group"])
+        if table:
+            st.markdown(f"**Class** : {' | '.join(table['classes'])}")
+            for irrep, chars in table["irreps"].items():
+                st.text(f"{irrep:<6} {chars}")
+        else:
+            st.warning("Table not available for this point group")
 
         if molecule_data.get("inversion"):
             st.info("Centre d'inversion (i) — point rose au centre")
@@ -252,7 +262,7 @@ def lancer_interface(molecule_data):
 
 molecule_data = {
     "nom":          "ammonia",
-    "formule":      "NH₃",
+    "formule":      "NH3",
     "point_group":  "C3v",
     "chiral":       False,
     "polar":        True,
@@ -260,10 +270,10 @@ molecule_data = {
     "raman_active": True,
 
     "atomes": [
-        {"element": "N", "x":  0.000, "y":  0.000, "z":  0.000},
-        {"element": "H", "x":  0.939, "y":  0.000, "z": -0.333},
-        {"element": "H", "x": -0.470, "y":  0.813, "z": -0.333},
-        {"element": "H", "x": -0.470, "y": -0.813, "z": -0.333},
+        {"element": "N", "x":  0.000, "y":  0.000, "z":  0.116},
+        {"element": "H", "x":  0.000, "y":  0.940, "z": -0.271},
+        {"element": "H", "x":  0.814, "y": -0.470, "z": -0.271},
+        {"element": "H", "x": -0.814, "y": -0.470, "z": -0.271},
     ],
 
     "liaisons": [[0,1],[0,2],[0,3]],
@@ -273,9 +283,9 @@ molecule_data = {
     ],
 
     "plans": [
-        {"normale": [1, 0, 0], "type": "σv", "label": "σv"},
-        {"normale": [0, 1, 0], "type": "σv", "label": "σv'"},
-        {"normale": [0.5, 0.866, 0], "type": "σv", "label": "σv''"},
+        {"normale": [1, 0, 0],           "type": "σv", "label": "σv"},
+        {"normale": [-0.5, 0.866, 0],    "type": "σv", "label": "σv'"},
+        {"normale": [-0.5, -0.866, 0],   "type": "σv", "label": "σv''"},
     ],
 
     "inversion": False,
