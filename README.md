@@ -76,8 +76,9 @@ It combines chemistry, programming, and scientific visualization into a fun educ
 ## 👩‍🔬 Authors
 
 Developed by:
+- Julie Schweizer
+- Margaux Bourhis
 - Shuyi Jia
-- Juliette
 
 ---
 
