@@ -4,6 +4,7 @@ import numpy as np
 import streamlit as st
 import py3Dmol
 from stmol import showmol
+from molecule_reel import construire_molecule_data
 
 # ═══════════════════════════════════════════════════════
 #  CONSTRUCTION DU FICHIER XYZ (format lu par py3Dmol)
@@ -175,121 +176,90 @@ def deduire_proprietes(molecule_data):
 #  INTERFACE STREAMLIT
 # ═══════════════════════════════════════════════════════
 
-def lancer_interface(molecule_data):
+def lancer_interface():
     st.set_page_config(page_title="Symétrie moléculaire", layout="wide")
     st.title("Molecular symmetry visualisator")
-    st.markdown(
-        f"**{molecule_data['nom']}** — `{molecule_data.get('formule', '')}` "
-        f"— point group : **{molecule_data['point_group']}**"
-    )
 
-    col_vue, col_info = st.columns([3, 1])
+    iupac_name = st.text_input("Entrez le nom IUPAC", placeholder="ex: water, ammonia...")
 
-    with col_info:
-        st.markdown("### Display")
-        show_axes   = st.checkbox("Axes Cn",    value=True)
-        show_plans  = st.checkbox("Plans σ",    value=True)
-        show_labels = st.checkbox("Atom's name", value=True)
-        style_mol   = st.selectbox("Molecule style", ["stick", "sphere", "line"])
+    if st.button("Analyser"):
+        with st.spinner("Recherche en cours..."):
+            try:
+                molecule_data = construire_molecule_data(iupac_name)
+            except ValueError as e:
+                st.error(str(e))
+                st.stop()
+        st.markdown(f"**{molecule_data['nom']}** — `{molecule_data.get('formule', '')}` "f"— point group : **{molecule_data['point_group']}**")
 
-        st.markdown("---")
-        st.markdown("### Legend of plans")
-        st.markdown("🟠 **σv** — vertical  \n🔵 **σh** — horizontal  \n🟢 **σd** — diedral  \n🔴 **axe Cn**")
+        col_vue, col_info = st.columns([3, 1])
 
-        st.markdown("---")
-        st.markdown("### Properties")
-        chiral, polaire, ir_txt, raman_txt = deduire_proprietes(molecule_data)
-        st.metric("Chirality",   "Chiral"  if chiral  else "Achiral")
-        st.metric("Polarity",    "Polar"  if polaire else "Apolar")
-        st.metric("IR actif",    ir_txt)
-        st.metric("Raman actif", raman_txt)
-        st.markdown("---")
-        st.markdown("### Character table")
-        from irreps import get_character_table
-        table = get_character_table(molecule_data["point_group"])
-        if table:
-            st.markdown(f"**Class** : {' | '.join(table['classes'])}")
-            for irrep, chars in table["irreps"].items():
-                st.text(f"{irrep:<6} {chars}")
-        else:
-            st.warning("Table not available for this point group")
+        with col_info:
+            st.markdown("### Display")
+            show_axes   = st.checkbox("Axes Cn",    value=True)
+            show_plans  = st.checkbox("Plans σ",    value=True)
+            show_labels = st.checkbox("Atom's name", value=True)
+            style_mol   = st.selectbox("Molecule style", ["stick", "sphere", "line"])
 
-        if molecule_data.get("inversion"):
-            st.info("Centre d'inversion (i) — point rose au centre")
+            st.markdown("---")
+            st.markdown("### Legend of plans")
+            st.markdown("🟠 **σv** — vertical  \n🔵 **σh** — horizontal  \n🟢 **σd** — diedral  \n🔴 **axe Cn**")
 
-    with col_vue:
-        # Création de la vue py3Dmol
-        vue = py3Dmol.view(width=700, height=500)
+            st.markdown("---")
+            st.markdown("### Properties")
+            chiral, polaire, ir_txt, raman_txt = deduire_proprietes(molecule_data)
+            st.metric("Chirality",   "Chiral"  if chiral  else "Achiral")
+            st.metric("Polarity",    "Polar"  if polaire else "Apolar")
+            st.metric("IR actif",    ir_txt)
+            st.metric("Raman actif", raman_txt)
+            st.markdown("---")
+            st.markdown("### Character table")
+            from irreps import get_character_table
+            table = get_character_table(molecule_data["point_group"])
+            if table:
+                st.markdown(f"**Class** : {' | '.join(table['classes'])}")
+                for irrep, chars in table["irreps"].items():
+                    st.text(f"{irrep:<6} {chars}")
+            else:
+                st.warning("Table not available for this point group")
 
-        # Charger la molécule en format XYZ — py3Dmol fait tout le rendu
-        vue.addModel(construire_xyz(molecule_data), "xyz")
-        vue.setStyle({}, {
-    "stick": {"radius": 0.12, "colorscheme": "Jmol"},
-    "sphere": {"scale": 0.3, "colorscheme": "Jmol"}
-})
+            if molecule_data.get("inversion"):
+                st.info("Centre d'inversion (i) — point rose au centre")
 
-        # Ajouter les éléments de symétrie
-        if show_axes:
-            ajouter_axes(vue, molecule_data)
-        if show_plans:
-            ajouter_plans(vue, molecule_data)
-        if molecule_data.get("inversion"):
-            ajouter_inversion(vue)
+        with col_vue:
+            # Création de la vue py3Dmol
+            vue = py3Dmol.view(width=700, height=500)
 
-        # Étiquettes des atomes
-        if show_labels:
-            for a in molecule_data["atomes"]:
-                vue.addLabel(a["element"], {
-                    "position":          {"x": a["x"], "y": a["y"], "z": a["z"]},
-                    "fontSize":          12,
-                    "fontColor":         "white",
-                    "backgroundColor":   "#333333",
-                    "backgroundOpacity": 0.6,
-                })
+            # Charger la molécule en format XYZ — py3Dmol fait tout le rendu
+            vue.addModel(construire_xyz(molecule_data), "xyz")
+            vue.setStyle({}, {
+        "stick": {"radius": 0.12, "colorscheme": "Jmol"},
+        "sphere": {"scale": 0.3, "colorscheme": "Jmol"}
+    })
 
-        vue.zoomTo()
+            # Ajouter les éléments de symétrie
+            if show_axes:
+                ajouter_axes(vue, molecule_data)
+            if show_plans:
+                ajouter_plans(vue, molecule_data)
+            if molecule_data.get("inversion"):
+                ajouter_inversion(vue)
 
-        # stmol affiche la vue py3Dmol dans streamlit en 2 lignes
-        showmol(vue, height=500, width=700)
+            # Étiquettes des atomes
+            if show_labels:
+                for a in molecule_data["atomes"]:
+                    vue.addLabel(a["element"], {
+                        "position":          {"x": a["x"], "y": a["y"], "z": a["z"]},
+                        "fontSize":          12,
+                        "fontColor":         "white",
+                        "backgroundColor":   "#333333",
+                        "backgroundOpacity": 0.6,
+                    })
+
+            vue.zoomTo()
+            # stmol affiche la vue py3Dmol dans streamlit en 2 lignes
+            showmol(vue, height=500, width=700)
 
     st.caption("Clic-glisser pour tourner · Molette pour zoomer · Double-clic pour centrer")
 
-
-# ═══════════════════════════════════════════════════════
-#  DICTIONNAIRE EXEMPLE H2O
-#  Remplacer par le molecule_data de ta coéquipière
-# ═══════════════════════════════════════════════════════
-
-molecule_data = {
-    "nom":          "ammonia",
-    "formule":      "NH3",
-    "point_group":  "C3v",
-    "chiral":       False,
-    "polar":        True,
-    "ir_active":    True,
-    "raman_active": True,
-
-    "atomes": [
-        {"element": "N", "x":  0.000, "y":  0.000, "z":  0.116},
-        {"element": "H", "x":  0.000, "y":  0.940, "z": -0.271},
-        {"element": "H", "x":  0.814, "y": -0.470, "z": -0.271},
-        {"element": "H", "x": -0.814, "y": -0.470, "z": -0.271},
-    ],
-
-    "liaisons": [[0,1],[0,2],[0,3]],
-
-    "axes": [
-        {"direction": [0, 0, 1], "ordre": 3, "label": "C3"},
-    ],
-
-    "plans": [
-        {"normale": [1, 0, 0],           "type": "σv", "label": "σv"},
-        {"normale": [-0.5, 0.866, 0],    "type": "σv", "label": "σv'"},
-        {"normale": [-0.5, -0.866, 0],   "type": "σv", "label": "σv''"},
-    ],
-
-    "inversion": False,
-}
-
 if __name__ == "__main__":
-    lancer_interface(molecule_data)
+    lancer_interface()
