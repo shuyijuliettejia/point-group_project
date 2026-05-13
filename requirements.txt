@@ -1,0 +1,7 @@
+numpy
+pubchempy
+rdkit
+pymatgen
+streamlit
+py3Dmol
+stmol
