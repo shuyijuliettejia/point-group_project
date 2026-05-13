@@ -11,29 +11,14 @@ from molecule_reel import construire_molecule_data
 # ═══════════════════════════════════════════════════════
 
 def construire_xyz(molecule_data):
-    """
-    py3Dmol lit un format texte standard appelé XYZ.
-    On construit ce texte depuis notre dictionnaire.
-    Format : nombre d'atomes / commentaire / un atome par ligne
-    """
     atomes = molecule_data["atomes"]
     lignes = [str(len(atomes)), molecule_data.get("nom", "molecule")]
     for a in atomes:
         lignes.append(f"{a['element']}  {a['x']:.4f}  {a['y']:.4f}  {a['z']:.4f}")
     return "\n".join(lignes)
 
-
-# ═══════════════════════════════════════════════════════
-#  AJOUT DES AXES DE SYMÉTRIE
-#  py3Dmol a addCylinder et addSphere intégrés
-# ═══════════════════════════════════════════════════════
-
+#  axes de symétrie
 def ajouter_axes(vue, molecule_data):
-    """
-    Dessine chaque axe Cn comme un cylindre rouge
-    avec une sphère à chaque extrémité.
-    py3Dmol.addCylinder fait ça en une ligne.
-    """
     for axe in molecule_data.get("axes", []):
         d = np.array(axe["direction"], dtype=float)
         d = d / np.linalg.norm(d)
@@ -66,12 +51,7 @@ def ajouter_axes(vue, molecule_data):
             "backgroundColor": "transparent",
         })
 
-
-# ═══════════════════════════════════════════════════════
-#  AJOUT DES PLANS DE SYMÉTRIE
-#  py3Dmol addCustom pour les triangles semi-transparents
-# ═══════════════════════════════════════════════════════
-
+#  plan symétrie 
 COULEURS_PLAN = {"σh": "#3B8BD4", "σv": "#EF9F27", "σd": "#1D9E75"}
 
 def ajouter_plans(vue, molecule_data):
@@ -128,11 +108,7 @@ def ajouter_plans(vue, molecule_data):
             "backgroundColor": "transparent",
         })
 
-
-# ═══════════════════════════════════════════════════════
-#  CENTRE D'INVERSION
-# ═══════════════════════════════════════════════════════
-
+#  centre inversion
 def ajouter_inversion(vue):
     vue.addSphere({
         "center":  {"x": 0, "y": 0, "z": 0},
@@ -147,11 +123,7 @@ def ajouter_inversion(vue):
         "backgroundColor": "transparent",
     })
 
-
-# ═══════════════════════════════════════════════════════
-#  PROPRIÉTÉS DEPUIS LE GROUPE PONCTUEL
-# ═══════════════════════════════════════════════════════
-
+#  prendre propriétés
 def deduire_proprietes(molecule_data):
     import re
     pg = molecule_data.get("point_group", "C1")
@@ -171,19 +143,15 @@ def deduire_proprietes(molecule_data):
 
     return chiral, polaire, ir_txt, raman_txt
 
-
-# ═══════════════════════════════════════════════════════
-#  INTERFACE STREAMLIT
-# ═══════════════════════════════════════════════════════
-
+#  interface streamlit 
 def lancer_interface():
     st.set_page_config(page_title="Symétrie moléculaire", layout="wide")
     st.title("Molecular symmetry visualisator")
 
-    iupac_name = st.text_input("Entrez le nom IUPAC", placeholder="ex: water, ammonia...")
+    iupac_name = st.text_input("Enter a IUPAC name of organic compound", placeholder="ex: water, ammonia...")
 
-    if st.button("Analyser"):
-        with st.spinner("Recherche en cours..."):
+    if st.button("Analyse"):
+        with st.spinner("Search in process..."):
             try:
                 molecule_data = construire_molecule_data(iupac_name)
             except ValueError as e:
