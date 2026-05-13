@@ -1,6 +1,6 @@
 # 🧪 Point Group Project
 
-### Interactive Molecular Symmetry Analysis in Python
+### Interactive Organic Molecular Symmetry Analysis in Python
 
 Molecular symmetry is one of those chemistry topics that is both fascinating and notoriously difficult to visualize. On paper, concepts like rotational axes, mirror planes, inversion centers, and character tables can quickly become abstract — especially when trying to imagine them in three dimensions 🤯📐 
 
