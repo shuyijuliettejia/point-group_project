@@ -4,12 +4,9 @@ import numpy as np
 import streamlit as st
 import py3Dmol
 from stmol import showmol
-from molecule_reel import construire_molecule_data
+from scripts.molecule_reel import construire_molecule_data
 
-# ═══════════════════════════════════════════════════════
-#  CONSTRUCTION DU FICHIER XYZ (format lu par py3Dmol)
-# ═══════════════════════════════════════════════════════
-
+#  construction molecule (lu par py3Dmol)
 def construire_xyz(molecule_data):
     atomes = molecule_data["atomes"]
     lignes = [str(len(atomes)), molecule_data.get("nom", "molecule")]
@@ -150,7 +147,7 @@ def lancer_interface():
 
     iupac_name = st.text_input("Enter a IUPAC name of organic compound", placeholder="ex: water, ammonia...")
 
-    if st.button("Analyse"):
+    if st.button("Analyser"):
         with st.spinner("Search in process..."):
             try:
                 molecule_data = construire_molecule_data(iupac_name)
