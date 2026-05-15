@@ -1,4 +1,4 @@
-from scripts.visualisation import construire_xyz, deduire_proprietes
+from pointgroup.visualisation import construire_xyz, deduire_proprietes
 
 def test_construire_xyz_water():
     molecule_data = {

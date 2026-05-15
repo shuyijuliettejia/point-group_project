@@ -1,5 +1,5 @@
 import pytest
-from scripts.molecule_reel import construire_molecule_data
+from pointgroup.molecule_reel import construire_molecule_data
 
 def test_point_group_water():
     data = construire_molecule_data("water")

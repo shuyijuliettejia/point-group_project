@@ -1,5 +1,3 @@
-# irreps.py
-
 CHARACTER_TABLES = {
     "C1": {
         "classes": ["E"],
@@ -10,6 +8,7 @@ CHARACTER_TABLES = {
             "A": "x, y, z ; rotations ; toutes vibrations"
         }
     },
+    
 
     "Ci": {
         "classes": ["E", "i"],
@@ -87,6 +86,7 @@ CHARACTER_TABLES = {
             "B3u": "x"
         }
     }
+    
 }
 
 

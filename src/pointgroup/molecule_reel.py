@@ -118,5 +118,3 @@ def construire_molecule_data(iupac_name):
 
 
 
-#Question marhce pas pour Oh et Ih comment faire
-#Question comment fiare si on ecrit un mauvais nom iupac et on veut proposer des solutions qui ressemble 
