@@ -57,6 +57,13 @@ Run the visualization interface:
 streamlit run scripts/visualisation.py
 ```
 
+Run the tests:
+
+```bash
+python -m pytest /tests
+```
+
+
 Optional - If you need jupyter lab, install it:
 
 ```bash
