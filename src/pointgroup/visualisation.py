@@ -4,7 +4,7 @@ import numpy as np
 import streamlit as st
 import py3Dmol
 from stmol import showmol
-from pointgroup.molecule_reel import construire_molecule_data
+from molecule_reel import construire_molecule_data
 
 #  construire molecule (lu par py3Dmol)
 def construire_xyz(molecule_data):
