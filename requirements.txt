@@ -5,3 +5,4 @@ pymatgen
 streamlit
 py3Dmol
 stmol
+pytest
