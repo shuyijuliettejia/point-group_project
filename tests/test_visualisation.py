@@ -1,3 +1,8 @@
+import sys
+from pathlib import Path
+import pytest
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from pointgroup.visualisation import construire_xyz, deduire_proprietes
 
 def test_construire_xyz_water():
@@ -41,8 +46,8 @@ def test_deduire_proprietes_without_inversion():
 
     assert chiral is False
     assert polaire is True
-    assert ir_txt == "Oui"
-    assert raman_txt == "Oui"
+    assert ir_txt == "Yes"
+    assert raman_txt == "Yes"
 
 
 def test_deduire_proprietes_with_inversion():
