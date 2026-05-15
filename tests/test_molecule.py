@@ -1,4 +1,8 @@
+import sys
+from pathlib import Path
 import pytest
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from pointgroup.molecule_reel import construire_molecule_data
 
 def test_point_group_water():

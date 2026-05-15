@@ -1,4 +1,9 @@
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from pointgroup.irreps import get_character_table
+
 
 def test_get_character_table_c2v():
     table = get_character_table("C2v")
