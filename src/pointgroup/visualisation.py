@@ -147,13 +147,19 @@ def lancer_interface():
 
     iupac_name = st.text_input("Enter a IUPAC name of organic compound", placeholder="ex: water, ammonia...")
 
+    if "molecule_data" not in st.session_state:
+        st.session_state.molecule_data = None
+
     if st.button("Analyse"):
-        with st.spinner("Search in process..."):
+        with st.spinner("Searching..."):
             try:
-                molecule_data = construire_molecule_data(iupac_name)
+                st.session_state.molecule_data = construire_molecule_data(iupac_name)
             except ValueError as e:
                 st.error(str(e))
                 st.stop()
+    molecule_data = st.session_state.molecule_data
+    
+    if molecule_data is not None:
         st.markdown(f"**{molecule_data['nom']}** — `{molecule_data.get('formule', '')}` "f"— point group : **{molecule_data['point_group']}**")
 
         col_vue, col_info = st.columns([3, 1])
