@@ -63,6 +63,25 @@ Run the tests:
 python -m pytest /tests
 ```
 
+⚠️ Python Version Compatibility:
+Some visualisation dependencies used in this project **stmol**, **ipywidgets**, **py3Dmol** may not yet be fully compatible with Python 3.13.
+
+For the best we recommend using:
+- Python 3.10
+- Python 3.11 (recommended)
+- Python 3.12
+
+If you encounter errors related to **ipywidgets**, **stmol**, or **ipython_genutils**, create a dedicated environment with Python 3.11:
+
+```bash
+python -m pytest /tests
+```
+
+Then launch the application normally:
+
+```bash
+streamlit run src/pointgroup/visualisation.py
+```
 
 Optional - If you need jupyter lab, install it:
 
@@ -74,9 +93,11 @@ Optional - Using Conda Environments
 If you prefer using Conda for Python environments, you can create an empty environment before installing as so:
 
 ```bash
-conda create -n #your_env_name python=3.10
-conda activate #your_env_name
+conda create -n pointgroup python=3.11
+conda activate pointgroup
 ```
+
+Python 3.11 is recommended for maximum package compatibility.
 ---
 
 ## 🎯 Why This Project Matters
