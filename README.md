@@ -83,13 +83,13 @@ Then launch the application normally:
 streamlit run src/pointgroup/visualisation.py
 ```
 
-Optional - If you need jupyter lab, install it:
+**Optional** - If you need jupyter lab, install it:
 
 ```bash
 pip install jupyterlab
 ```
 
-Optional - Using Conda Environments
+**Optional** - Using Conda Environments
 If you prefer using Conda for Python environments, you can create an empty environment before installing as so:
 
 ```bash
