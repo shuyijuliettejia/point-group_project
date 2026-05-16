@@ -54,7 +54,7 @@ pip install -r requirements.txt
 Run the visualization interface:
 
 ```bash
-streamlit run scripts/visualisation.py
+streamlit run src/pointgroup/visualisation.py
 ```
 
 Run the tests:
