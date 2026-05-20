@@ -6,7 +6,7 @@ import py3Dmol
 from stmol import showmol
 from molecule_reel import construire_molecule_data
 
-#  construire molecule (lu par py3Dmol)
+
 def construire_xyz(molecule_data):
     atomes = molecule_data["atomes"]
     lignes = [str(len(atomes)), molecule_data.get("nom", "molecule")]
@@ -14,7 +14,7 @@ def construire_xyz(molecule_data):
         lignes.append(f"{a['element']}  {a['x']:.4f}  {a['y']:.4f}  {a['z']:.4f}")
     return "\n".join(lignes)
 
-#  axes de symétrie
+
 def ajouter_axes(vue, molecule_data):
     for axe in molecule_data.get("axes", []):
         d = np.array(axe["direction"], dtype=float)
@@ -24,7 +24,7 @@ def ajouter_axes(vue, molecule_data):
         debut = (-d * longueur).tolist()
         fin   = ( d * longueur).tolist()
 
-        # Cylindre de l'axe
+        
         vue.addCylinder({
             "start":  {"x": debut[0], "y": debut[1], "z": debut[2]},
             "end":    {"x": fin[0],   "y": fin[1],   "z": fin[2]},
@@ -33,14 +33,14 @@ def ajouter_axes(vue, molecule_data):
             "opacity": 0.9,
         })
 
-        # Sphère à l'extrémité
+       
         vue.addSphere({
             "center": {"x": fin[0], "y": fin[1], "z": fin[2]},
             "radius": 0.12,
             "color":  "#E24B4A",
         })
 
-        # Étiquette
+        
         vue.addLabel(axe["label"], {
             "position":        {"x": fin[0]*1.2, "y": fin[1]*1.2, "z": fin[2]*1.2},
             "fontSize":        14,
@@ -48,7 +48,7 @@ def ajouter_axes(vue, molecule_data):
             "backgroundColor": "transparent",
         })
 
-#  plan symétrie 
+ 
 COULEURS_PLAN = {"σh": "#3B8BD4", "σv": "#EF9F27", "σd": "#1D9E75"}
 
 def ajouter_plans(vue, molecule_data):
@@ -62,7 +62,7 @@ def ajouter_plans(vue, molecule_data):
         n = n / np.linalg.norm(n)
         couleur = COULEURS_PLAN.get(plan["type"], "#888888")
 
-        # Deux vecteurs perpendiculaires dans le plan
+        
         ref = np.array([1, 0, 0]) if abs(n[0]) < 0.9 else np.array([0, 1, 0])
         u   = ref - np.dot(ref, n) * n
         u   = u / np.linalg.norm(u)
@@ -77,7 +77,7 @@ def ajouter_plans(vue, molecule_data):
         def pt(c):
             return {"x": float(c[0]), "y": float(c[1]), "z": float(c[2])}
 
-        # Deux triangles pour former le carré du plan
+      
         for triangle in [(A, B, C), (A, C, D)]:
             vue.addCustom({
                 "vertexColors": [couleur, couleur, couleur],
@@ -86,7 +86,7 @@ def ajouter_plans(vue, molecule_data):
                 "opacity":      0.25,
             })
 
-        # Bordure du plan
+        
         for depart, arrivee in [(A,B),(B,C),(C,D),(D,A)]:
             vue.addCylinder({
                 "start":  pt(depart),
@@ -105,7 +105,7 @@ def ajouter_plans(vue, molecule_data):
             "backgroundColor": "transparent",
         })
 
-#  centre inversion
+
 def ajouter_inversion(vue):
     vue.addSphere({
         "center":  {"x": 0, "y": 0, "z": 0},
@@ -120,7 +120,7 @@ def ajouter_inversion(vue):
         "backgroundColor": "transparent",
     })
 
-#  prendre propriétés
+
 def deduire_proprietes(molecule_data):
     import re
     pg = molecule_data.get("point_group", "C1")
@@ -140,7 +140,7 @@ def deduire_proprietes(molecule_data):
 
     return chiral, polaire, ir_txt, raman_txt
 
-#  interface streamlit 
+
 def lancer_interface():
     st.set_page_config(page_title="Symétrie moléculaire", layout="wide")
     st.title("Molecular symmetry visualisator")
@@ -197,17 +197,17 @@ def lancer_interface():
                 st.info("Centre d'inversion (i) — point rose au centre")
 
         with col_vue:
-            # Création de la vue py3Dmol
+            
             vue = py3Dmol.view(width=700, height=500)
 
-            # Charger la molécule en format XYZ — py3Dmol fait tout le rendu
+            
             vue.addModel(construire_xyz(molecule_data), "xyz")
             vue.setStyle({}, {
         "stick": {"radius": 0.12, "colorscheme": "Jmol"},
         "sphere": {"scale": 0.3, "colorscheme": "Jmol"}
     })
 
-            # Ajouter les éléments de symétrie
+            
             if show_axes:
                 ajouter_axes(vue, molecule_data)
             if show_plans:
@@ -215,7 +215,7 @@ def lancer_interface():
             if molecule_data.get("inversion"):
                 ajouter_inversion(vue)
 
-            # Étiquettes des atomes
+          
             if show_labels:
                 for a in molecule_data["atomes"]:
                     vue.addLabel(a["element"], {
@@ -227,7 +227,7 @@ def lancer_interface():
                     })
 
             vue.zoomTo()
-            # stmol affiche la vue py3Dmol dans streamlit en 2 lignes
+          
             showmol(vue, height=500, width=700)
 
     st.caption("Clic-glisser pour tourner · Molette pour zoomer · Double-clic pour centrer")
