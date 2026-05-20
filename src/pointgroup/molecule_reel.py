@@ -18,7 +18,7 @@ def construire_molecule_data(iupac_name):
     formule = c.molecular_formula
     masse   = float(c.molecular_weight)
 
-    #construction de la molecule 
+ 
     mol = Chem.MolFromSmiles(smiles)
     mol = Chem.AddHs(mol)
     result = AllChem.EmbedMolecule(mol, AllChem.ETKDGv3())
@@ -26,7 +26,7 @@ def construire_molecule_data(iupac_name):
         AllChem.EmbedMolecule(mol, AllChem.ETKDG())
     AllChem.MMFFOptimizeMolecule(mol)
 
-    #extraction des coordonnées 
+  
     conf = mol.GetConformer()
     symbols, coords = [], []
     for i, atom in enumerate(mol.GetAtoms()):
@@ -35,7 +35,7 @@ def construire_molecule_data(iupac_name):
         coords.append([pos.x, pos.y, pos.z])
     coords = np.array(coords)
 
-    #analyse du point group 
+    
     pmg_mol     = PmgMol(symbols, coords)
     analyzer    = PointGroupAnalyzer(pmg_mol)
     point_group = str(analyzer.get_pointgroup())
@@ -43,7 +43,7 @@ def construire_molecule_data(iupac_name):
 
     axes, plans, inversion = [], [], False
 
-    #analyse des symetries 
+   
     for op in sym_ops:
         mat   = op.rotation_matrix
         trace = np.trace(mat)
@@ -81,7 +81,7 @@ def construire_molecule_data(iupac_name):
             suffix     = ["", "'", "''", "'''"][k] if k < 4 else str(k)
             p["label"] = f"σv{suffix}"
 
-    #propriétés physiques 
+
     is_chiral       = len(Chem.FindMolChiralCenters(mol, includeUnassigned=True)) > 0
     nonpolar_groups = {"Ih", "Oh", "Td", "D6h", "D4h", "D3h", "D2h"}
     is_polar        = point_group not in nonpolar_groups and not inversion
